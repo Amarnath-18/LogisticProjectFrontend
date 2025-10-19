@@ -29,9 +29,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const initAuth = async () => {
       try {
+        console.log('AuthContext: Checking current user...');
         const currentUser = await authService.getCurrentUser();
+        console.log('AuthContext: User found:', currentUser);
         setUser(currentUser);
-      } catch (error) {
+      } catch (error: any) {
+        console.log('AuthContext: Auth check failed:', error.response?.status, error.message);
         setUser(null);
       } finally {
         setLoading(false);
@@ -63,6 +66,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {

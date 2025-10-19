@@ -20,7 +20,7 @@ export const ShipmentDetailsPage = () => {
   const [isAssignDriverModalOpen, setIsAssignDriverModalOpen] = useState(false);
   const [isUpdateStatusModalOpen, setIsUpdateStatusModalOpen] = useState(false);
   const { user } = useAuth();
-
+  
   useEffect(() => {
     loadShipment();
     if (user?.role === 'Admin') {
@@ -30,7 +30,8 @@ export const ShipmentDetailsPage = () => {
 
   const loadShipment = async () => {
     try {
-      const data = await shipmentService.getShipmentById(Number(id));
+      if(!id) return ;
+      const data = await shipmentService.getShipmentById(id);
       setShipment(data);
     } catch (error) {
       console.error('Failed to load shipment:', error);

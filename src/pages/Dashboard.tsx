@@ -6,7 +6,10 @@ import { CustomerDashboard } from './CustomerDashboard';
 export const Dashboard = () => {
   const { user } = useAuth();
 
-  if (!user) return null;
+  // For debugging - show something even without user
+  if (!user) {
+    return null;
+  }
 
   switch (user.role) {
     case 'Admin':

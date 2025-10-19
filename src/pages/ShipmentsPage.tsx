@@ -4,8 +4,7 @@ import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
-import { Modal } from '../components/Modal';
-import { Input } from '../components/Input';
+import { CreateShipmentForm } from '../components/CreateShipmentForm';
 import { Shipment, CreateShipmentRequest } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { useAuth } from '../context/AuthContext';
@@ -133,77 +132,15 @@ export const ShipmentsPage = () => {
           </Card>
         )}
 
-        <CreateShipmentModal
+        <CreateShipmentForm
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
           onCreate={handleCreateShipment}
+          showDebugInfo={true}
         />
       </div>
     </Layout>
   );
 };
 
-interface CreateShipmentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreate: (data: CreateShipmentRequest) => void;
-}
 
-const CreateShipmentModal = ({ isOpen, onClose, onCreate }: CreateShipmentModalProps) => {
-  const [formData, setFormData] = useState<CreateShipmentRequest>({
-    receiverName: '',
-    receiverEmail: '',
-    receiverPhone: '',
-    originAddress: '',
-    destinationAddress: '',
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onCreate(formData);
-  };
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Shipment">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Receiver Name"
-          value={formData.receiverName}
-          onChange={(e) => setFormData({ ...formData, receiverName: e.target.value })}
-          required
-        />
-        <Input
-          label="Receiver Email"
-          type="email"
-          value={formData.receiverEmail}
-          onChange={(e) => setFormData({ ...formData, receiverEmail: e.target.value })}
-          required
-        />
-        <Input
-          label="Receiver Phone"
-          type="tel"
-          value={formData.receiverPhone}
-          onChange={(e) => setFormData({ ...formData, receiverPhone: e.target.value })}
-        />
-        <Input
-          label="Origin Address"
-          value={formData.originAddress}
-          onChange={(e) => setFormData({ ...formData, originAddress: e.target.value })}
-          required
-        />
-        <Input
-          label="Destination Address"
-          value={formData.destinationAddress}
-          onChange={(e) => setFormData({ ...formData, destinationAddress: e.target.value })}
-          required
-        />
-        <div className="flex gap-2 justify-end">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">Create Shipment</Button>
-        </div>
-      </form>
-    </Modal>
-  );
-};

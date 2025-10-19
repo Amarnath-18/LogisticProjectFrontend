@@ -22,8 +22,8 @@ export const Login = () => {
     try {
       await login({ email, password });
       navigate('/');
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+    } catch (err: any) {      
+      setError(err.response?.data || 'Login failed. Please try again.');
     } finally {
       setLoading(false);
     }

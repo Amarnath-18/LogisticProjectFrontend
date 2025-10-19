@@ -4,8 +4,7 @@ import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
-import { Modal } from '../components/Modal';
-import { Input } from '../components/Input';
+import { CreateShipmentForm } from '../components/CreateShipmentForm';
 import { Shipment, CreateShipmentRequest } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { Package, Plus, Clock, CheckCircle } from 'lucide-react';
@@ -44,54 +43,59 @@ export const CustomerDashboard = () => {
     (s) => s.status !== 'Delivered' && s.status !== 'Cancelled'
   );
   const deliveredShipments = shipments.filter((s) => s.status === 'Delivered');
-
+  console.log(shipments);
+  
   return (
     <Layout>
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
+      <div className="space-y-4 sm:space-y-6">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Customer Dashboard</h1>
-            <p className="text-gray-600 mt-2">Track and manage your shipments</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Customer Dashboard</h1>
+            <p className="text-gray-600 mt-1 sm:mt-2 text-sm sm:text-base">Track and manage your shipments</p>
           </div>
-          <Button onClick={() => setIsCreateModalOpen(true)}>
+          <Button 
+            onClick={() => setIsCreateModalOpen(true)}
+            className="w-full sm:w-auto"
+          >
             <Plus className="w-4 h-4 mr-2" />
-            Create Shipment
+            <span className="hidden sm:inline">Create Shipment</span>
+            <span className="sm:hidden">Create</span>
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
           <Card>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm text-gray-600">Total Shipments</p>
-                <p className="text-2xl font-bold text-gray-900">{shipments.length}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{shipments.length}</p>
               </div>
-              <div className="p-3 bg-blue-100 rounded-lg">
-                <Package className="w-6 h-6 text-blue-600" />
+              <div className="p-2 sm:p-3 bg-blue-100 rounded-lg flex-shrink-0">
+                <Package className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
             </div>
           </Card>
 
           <Card>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm text-gray-600">In Transit</p>
-                <p className="text-2xl font-bold text-gray-900">{activeShipments.length}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{activeShipments.length}</p>
               </div>
-              <div className="p-3 bg-yellow-100 rounded-lg">
-                <Clock className="w-6 h-6 text-yellow-600" />
+              <div className="p-2 sm:p-3 bg-yellow-100 rounded-lg flex-shrink-0">
+                <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
               </div>
             </div>
           </Card>
 
           <Card>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="min-w-0 flex-1">
                 <p className="text-sm text-gray-600">Delivered</p>
-                <p className="text-2xl font-bold text-gray-900">{deliveredShipments.length}</p>
+                <p className="text-xl sm:text-2xl font-bold text-gray-900">{deliveredShipments.length}</p>
               </div>
-              <div className="p-3 bg-green-100 rounded-lg">
-                <CheckCircle className="w-6 h-6 text-green-600" />
+              <div className="p-2 sm:p-3 bg-green-100 rounded-lg flex-shrink-0">
+                <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               </div>
             </div>
           </Card>
@@ -103,61 +107,96 @@ export const CustomerDashboard = () => {
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead>
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Tracking Number
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Receiver
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Destination
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {shipments.map((shipment) => (
-                    <tr key={shipment.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-blue-600">
-                          {shipment.trackingNumber}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">{shipment.receiverName}</div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="text-sm text-gray-900">{shipment.destinationAddress}</div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <StatusBadge status={shipment.status} />
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <Link to={`/shipments/${shipment.id}`}>
-                          <Button size="sm">Track</Button>
-                        </Link>
-                      </td>
+            <>
+              {/* Desktop Table */}
+              <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Tracking Number
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Receiver
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Destination
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {shipments.map((shipment) => (
+                      <tr key={shipment.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-blue-600">
+                            {shipment.trackingNumber}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">{shipment.receiverName}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900">{shipment.destinationAddress}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <StatusBadge status={shipment.status} />
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <Link to={`/shipments/${shipment.id}`}>
+                            <Button size="sm">Track</Button>
+                          </Link>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Mobile Card Layout */}
+              <div className="md:hidden space-y-4">
+                {shipments.map((shipment) => (
+                  <div key={shipment.id} className="border border-gray-200 rounded-lg p-4 bg-white">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-sm font-medium text-blue-600 truncate">
+                          {shipment.trackingNumber}
+                        </h4>
+                        <div className="mt-1">
+                          <StatusBadge status={shipment.status} />
+                        </div>
+                      </div>
+                      <Link to={`/shipments/${shipment.id}`} className="ml-3">
+                        <Button size="sm">Track</Button>
+                      </Link>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="text-gray-500">Receiver: </span>
+                        <span className="text-gray-900">{shipment.receiverName}</span>
+                      </div>
+                      <div>
+                        <span className="text-gray-500">To: </span>
+                        <span className="text-gray-900">{shipment.destinationAddress}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               {shipments.length === 0 && (
                 <div className="text-center py-8 text-gray-500">No shipments yet</div>
               )}
-            </div>
+            </>
           )}
         </Card>
 
-        <CreateShipmentModal
+        <CreateShipmentForm
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
           onCreate={handleCreateShipment}
@@ -167,67 +206,4 @@ export const CustomerDashboard = () => {
   );
 };
 
-interface CreateShipmentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onCreate: (data: CreateShipmentRequest) => void;
-}
 
-const CreateShipmentModal = ({ isOpen, onClose, onCreate }: CreateShipmentModalProps) => {
-  const [formData, setFormData] = useState<CreateShipmentRequest>({
-    receiverName: '',
-    receiverEmail: '',
-    receiverPhone: '',
-    originAddress: '',
-    destinationAddress: '',
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onCreate(formData);
-  };
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Create New Shipment">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <Input
-          label="Receiver Name"
-          value={formData.receiverName}
-          onChange={(e) => setFormData({ ...formData, receiverName: e.target.value })}
-          required
-        />
-        <Input
-          label="Receiver Email"
-          type="email"
-          value={formData.receiverEmail}
-          onChange={(e) => setFormData({ ...formData, receiverEmail: e.target.value })}
-          required
-        />
-        <Input
-          label="Receiver Phone"
-          type="tel"
-          value={formData.receiverPhone}
-          onChange={(e) => setFormData({ ...formData, receiverPhone: e.target.value })}
-        />
-        <Input
-          label="Origin Address"
-          value={formData.originAddress}
-          onChange={(e) => setFormData({ ...formData, originAddress: e.target.value })}
-          required
-        />
-        <Input
-          label="Destination Address"
-          value={formData.destinationAddress}
-          onChange={(e) => setFormData({ ...formData, destinationAddress: e.target.value })}
-          required
-        />
-        <div className="flex gap-2 justify-end">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">Create Shipment</Button>
-        </div>
-      </form>
-    </Modal>
-  );
-};
