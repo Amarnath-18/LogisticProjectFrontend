@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -63,7 +64,7 @@ export const SmartAssignmentPage = () => {
       handleAssignment();
     } catch (error: any) {
       console.error('Failed to assign driver:', error);
-      alert(error.response?.data?.message || 'Failed to assign driver');
+      toast.error(error.response?.data || 'Failed to assign driver');
     }
   };
 

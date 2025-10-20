@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -33,7 +34,7 @@ export const UsersPage = () => {
       await userService.deleteUser(id);
       setUsers(users.filter((u) => u.id !== id));
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to delete user');
+      toast.error(error.response?.data || 'Failed to delete user');
     }
   };
 

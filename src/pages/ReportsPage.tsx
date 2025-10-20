@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -45,7 +46,7 @@ export const ReportsPage = () => {
         endDate: '',
       });
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to generate report');
+      toast.error(error.response?.data || 'Failed to generate report');
     } finally {
       setGenerating(false);
     }
@@ -63,7 +64,7 @@ export const ReportsPage = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch (error) {
-      alert('Failed to download report');
+      toast.error('Failed to download report');
     }
   };
 

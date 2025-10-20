@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import toast from 'react-hot-toast';
 import { Modal } from './Modal';
 import { Button } from './Button';
 import { Card } from './Card';
@@ -38,7 +39,7 @@ export const SmartDriverAssignmentModal: React.FC<SmartDriverAssignmentModalProp
       setRecommendations(data);
     } catch (error) {
       console.error('Failed to load driver recommendations:', error);
-      alert('Failed to load driver recommendations');
+      toast.error('Failed to load driver recommendations');
     } finally {
       setLoading(false);
     }
@@ -57,7 +58,7 @@ export const SmartDriverAssignmentModal: React.FC<SmartDriverAssignmentModalProp
       onClose();
     } catch (error: any) {
       console.error('Failed to auto assign driver:', error);
-      alert(error.response?.data?.message || 'Failed to auto assign driver');
+      toast.error(error.response?.data?.message || 'Failed to auto assign driver');
     } finally {
       setAssigning(false);
     }
@@ -75,7 +76,7 @@ export const SmartDriverAssignmentModal: React.FC<SmartDriverAssignmentModalProp
       onClose();
     } catch (error: any) {
       console.error('Failed to assign driver:', error);
-      alert(error.response?.data?.message || 'Failed to assign driver');
+      toast.error(error.response?.data?.message || 'Failed to assign driver');
     } finally {
       setAssigning(false);
     }

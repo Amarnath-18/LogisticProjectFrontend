@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Card } from './Card';
 import { Button } from './Button';
 import { Input } from './Input';
@@ -32,10 +33,10 @@ export const UserProfileManagement: React.FC<UserProfileManagementProps> = ({
       await userService.updateUser(user.id, profileData);
       setIsProfileModalOpen(false);
       onProfileUpdated?.();
-      alert('Profile updated successfully');
+      toast.success('Profile updated successfully');
     } catch (error: any) {
       console.error('Failed to update profile:', error);
-      alert(error.response?.data?.message || 'Failed to update profile');
+      toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setUpdating(false);
     }

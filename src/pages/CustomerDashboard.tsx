@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -35,7 +36,7 @@ export const CustomerDashboard = () => {
       setIsCreateModalOpen(false);
       loadShipments();
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to create shipment');
+      toast.error(error.response?.data || 'Failed to create shipment');
     }
   };
 

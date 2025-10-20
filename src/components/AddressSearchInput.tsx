@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Search } from 'lucide-react';
 import { Button } from './Button';
 import { Input } from './Input';
@@ -35,11 +36,11 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
         onChange(value.trim());
         onLocationSelect(value.trim());
       } else {
-        alert('Please enter a more detailed address.');
+        toast.error('Please enter a more detailed address.');
       }
     } catch (error) {
       console.error('Address validation error:', error);
-      alert('Error validating address. Please try again.');
+      toast.error('Error validating address. Please try again.');
     } finally {
       setIsSearching(false);
     }
