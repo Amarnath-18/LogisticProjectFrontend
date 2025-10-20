@@ -46,7 +46,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
       onProfileUpdated?.();
       toast.success('Profile updated successfully');
     } catch (error: any) {
-      console.error('Failed to update profile:', error);
+      console.error('Failed to update profile:', error?.response);
       toast.error(error.response?.data || 'Failed to update profile');
     } finally {
       setUpdating(false);

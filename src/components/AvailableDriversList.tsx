@@ -28,6 +28,8 @@ export const AvailableDriversList: React.FC<AvailableDriversListProps> = ({
       setLoading(true);
       // Get drivers from shipment service which has more complete data for availability
       const shipmentDrivers = await shipmentService.getAvailableDrivers();
+      console.log(shipmentDrivers);
+      
       setDrivers(shipmentDrivers);
     } catch (error) {
       console.error('Failed to load available drivers:', error);

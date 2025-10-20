@@ -58,7 +58,7 @@ export const SmartDriverAssignmentModal: React.FC<SmartDriverAssignmentModalProp
       onClose();
     } catch (error: any) {
       console.error('Failed to auto assign driver:', error);
-      toast.error(error.response?.data?.message || 'Failed to auto assign driver');
+      toast.error(error.response?.data || 'Failed to auto assign driver');
     } finally {
       setAssigning(false);
     }
@@ -126,7 +126,7 @@ export const SmartDriverAssignmentModal: React.FC<SmartDriverAssignmentModalProp
             disabled={assigning || loading}
             className="min-w-[200px]"
           >
-            {assigning ? 'Assigning...' : 'Auto Assign Best Driver'}
+            {assigning ? 'Assigning...' : ' Best Driver'}
           </Button>
         </div>
 
