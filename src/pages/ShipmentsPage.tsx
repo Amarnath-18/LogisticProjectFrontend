@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
@@ -8,13 +8,14 @@ import { CreateShipmentForm } from '../components/CreateShipmentForm';
 import { Shipment, CreateShipmentRequest } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Eye } from 'lucide-react';
+import { Plus, Eye, Zap } from 'lucide-react';
 
 export const ShipmentsPage = () => {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadShipments();
@@ -114,12 +115,24 @@ export const ShipmentsPage = () => {
                         {new Date(shipment.createdAt).toLocaleDateString()}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <Link to={`/shipments/${shipment.id}`}>
-                          <Button size="sm" variant="secondary">
-                            <Eye className="w-4 h-4 mr-1" />
-                            View
-                          </Button>
-                        </Link>
+                        <div className="flex gap-2">
+                          <Link to={`/shipments/${shipment.id}`}>
+                            <Button size="sm" variant="secondary">
+                              <Eye className="w-4 h-4 mr-1" />
+                              View
+                            </Button>
+                          </Link>
+                          {user?.role === 'Admin' && !shipment.assignedDriver && (
+                            <Button 
+                              size="sm" 
+                              onClick={() => navigate(`/shipments/${shipment.id}/smart-assign`)}
+                              className="flex items-center gap-1"
+                            >
+                              <Zap className="w-4 h-4" />
+                              Assign
+                            </Button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

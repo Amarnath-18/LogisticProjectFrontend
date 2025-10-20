@@ -26,10 +26,10 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
     receiverPhone: '',
     originAddress: '',
     destinationAddress: '',
-    originLatitude: undefined,
-    originLongitude: undefined,
-    destinationLatitude: undefined,
-    destinationLongitude: undefined,
+    originCity: '',
+    originRegion: '',
+    destinationCity: '',
+    destinationRegion: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -44,10 +44,10 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
       receiverPhone: '',
       originAddress: '',
       destinationAddress: '',
-      originLatitude: undefined,
-      originLongitude: undefined,
-      destinationLatitude: undefined,
-      destinationLongitude: undefined,
+      originCity: '',
+      originRegion: '',
+      destinationCity: '',
+      destinationRegion: '',
     });
   };
 
@@ -56,21 +56,17 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
     onClose();
   };
 
-  const handleOriginChange = (address: string, lat?: number, lng?: number) => {
+  const handleOriginChange = (address: string) => {
     setFormData(prev => ({
       ...prev,
-      originAddress: address,
-      originLatitude: lat,
-      originLongitude: lng
+      originAddress: address
     }));
   };
 
-  const handleDestinationChange = (address: string, lat?: number, lng?: number) => {
+  const handleDestinationChange = (address: string) => {
     setFormData(prev => ({
       ...prev,
-      destinationAddress: address,
-      destinationLatitude: lat,
-      destinationLongitude: lng
+      destinationAddress: address
     }));
   };
 
@@ -119,6 +115,37 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
           onOriginChange={handleOriginChange}
           onDestinationChange={handleDestinationChange}
         />
+
+        {/* Optional City/Region Fields */}
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Origin City (Optional)"
+            value={formData.originCity || ''}
+            onChange={(e) => setFormData({ ...formData, originCity: e.target.value })}
+            placeholder="e.g. New York"
+          />
+          <Input
+            label="Origin Region/State (Optional)"
+            value={formData.originRegion || ''}
+            onChange={(e) => setFormData({ ...formData, originRegion: e.target.value })}
+            placeholder="e.g. NY"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Destination City (Optional)"
+            value={formData.destinationCity || ''}
+            onChange={(e) => setFormData({ ...formData, destinationCity: e.target.value })}
+            placeholder="e.g. Los Angeles"
+          />
+          <Input
+            label="Destination Region/State (Optional)"
+            value={formData.destinationRegion || ''}
+            onChange={(e) => setFormData({ ...formData, destinationRegion: e.target.value })}
+            placeholder="e.g. CA"
+          />
+        </div>
         
         <div className="flex gap-2 justify-end">
           <Button type="button" variant="secondary" onClick={handleClose}>

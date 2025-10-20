@@ -4,7 +4,7 @@ import { AddressSearchInput } from './AddressSearchInput';
 interface ModularLocationPickerProps {
   label: string;
   value: string;
-  onChange: (address: string, lat: number, lng: number) => void;
+  onChange: (address: string) => void;
   placeholder?: string;
   required?: boolean;
 }
@@ -13,14 +13,14 @@ export const ModularLocationPicker: React.FC<ModularLocationPickerProps> = ({
   label,
   value,
   onChange,
-  placeholder = "Enter address to get coordinates",
+  placeholder = "Enter address",
   required = false
 }) => {
   const [searchInput, setSearchInput] = useState(value);
 
-  const handleLocationSelect = (address: string, lat: number, lng: number) => {
+  const handleLocationSelect = (address: string) => {
     setSearchInput(address);
-    onChange(address, lat, lng);
+    onChange(address);
   };
 
   return (

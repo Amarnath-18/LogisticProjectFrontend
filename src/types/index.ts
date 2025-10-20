@@ -17,8 +17,6 @@ export interface TrackingUpdate {
   id: number;
   status: ShipmentStatus;
   location?: string;
-  latitude?: number;
-  longitude?: number;
   remarks?: string;
   updatedBy: User;
   timestamp: string;
@@ -33,10 +31,10 @@ export interface Shipment {
   receiverPhone?: string;
   originAddress: string;
   destinationAddress: string;
-  originLatitude?: number;
-  originLongitude?: number;
-  destinationLatitude?: number;
-  destinationLongitude?: number;
+  originCity?: string;
+  originRegion?: string;
+  destinationCity?: string;
+  destinationRegion?: string;
   status: ShipmentStatus;
   assignedDriver?: User;
   createdAt: string;
@@ -63,17 +61,15 @@ export interface CreateShipmentRequest {
   receiverPhone?: string;
   originAddress: string;
   destinationAddress: string;
-  originLatitude?: number;
-  originLongitude?: number;
-  destinationLatitude?: number;
-  destinationLongitude?: number;
+  originCity?: string;
+  originRegion?: string;
+  destinationCity?: string;
+  destinationRegion?: string;
 }
 
 export interface UpdateShipmentStatusRequest {
   status: ShipmentStatus;
   location?: string;
-  latitude?: number;
-  longitude?: number;
   remarks?: string;
 }
 
@@ -85,6 +81,64 @@ export interface UpdateUserRequest {
   fullName?: string;
   email?: string;
   phone?: string;
+}
+
+export interface DriverDetails {
+  status: 'Available' | 'Busy' | 'OffDuty' | 'OnBreak';
+  currentAddress?: string;
+  maxActiveShipments?: number;
+  vehicleType?: string;
+  licenseNumber?: string;
+  isVerified?: boolean;
+  lastActiveTime?: string;
+  workStartTime?: string;
+  workEndTime?: string;
+  preferredRegion?: string;
+}
+
+export interface DriverRecommendation {
+  driver: User;
+  driverDetails: DriverDetails;
+  distance?: number;
+  activeShipments: number;
+  rating?: number;
+  completedShipments?: number;
+  lastLocationUpdate?: string;
+  score?: number;
+  recommendationReason?: string;
+  recommendationFactors?: string[];
+}
+
+export interface DriverAvailability {
+  driver: User;
+  driverDetails: DriverDetails;
+  activeShipments: number;
+  isAvailable: boolean;
+  availabilityReason: string;
+}
+
+export interface SmartAssignRequest {
+  preferredDriverId?: string;
+  useAutoAssignment?: boolean;
+  maxRecommendations?: number;
+  priority?: 'Distance' | 'Experience' | 'Rating' | 'Availability' | 'Balanced';
+}
+
+export interface UpdateDriverLocationRequest {
+  address: string;
+}
+
+export interface UpdateDriverStatusRequest {
+  status: 'Available' | 'Busy' | 'OffDuty' | 'OnBreak';
+}
+
+export interface UpdateDriverProfileRequest {
+  maxActiveShipments?: number;
+  vehicleType?: string;
+  licenseNumber?: string;
+  workStartTime?: string;
+  workEndTime?: string;
+  preferredRegion?: string;
 }
 
 export interface DashboardAnalytics {

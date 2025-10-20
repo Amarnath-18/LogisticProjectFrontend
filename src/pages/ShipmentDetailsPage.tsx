@@ -1,31 +1,28 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
-import { Shipment, User, UpdateShipmentStatusRequest, ShipmentStatus } from '../types';
+import { SmartDriverAssignmentModal } from '../components/SmartDriverAssignmentModal';
+import { Shipment, UpdateShipmentStatusRequest, ShipmentStatus } from '../types';
 import { shipmentService } from '../services/shipment.service';
-import { userService } from '../services/user.service';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Truck } from 'lucide-react';
+import { MapPin, Clock, Truck, Zap } from 'lucide-react';
 
 export const ShipmentDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [shipment, setShipment] = useState<Shipment | null>(null);
-  const [drivers, setDrivers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isAssignDriverModalOpen, setIsAssignDriverModalOpen] = useState(false);
+  const [isSmartAssignModalOpen, setIsSmartAssignModalOpen] = useState(false);
   const [isUpdateStatusModalOpen, setIsUpdateStatusModalOpen] = useState(false);
   const { user } = useAuth();
   
   useEffect(() => {
     loadShipment();
-    if (user?.role === 'Admin') {
-      loadDrivers();
-    }
   }, [id]);
 
   const loadShipment = async () => {
@@ -40,28 +37,15 @@ export const ShipmentDetailsPage = () => {
     }
   };
 
-  const loadDrivers = async () => {
-    try {
-      const data = await userService.getAllDrivers();
-      setDrivers(data);
-    } catch (error) {
-      console.error('Failed to load drivers:', error);
-    }
-  };
-
-  const handleAssignDriver = async (driverId: number) => {
-    try {
-      await shipmentService.assignDriver(Number(id), { driverId });
-      setIsAssignDriverModalOpen(false);
-      loadShipment();
-    } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to assign driver');
-    }
+  const handleDriverAssigned = () => {
+    setIsSmartAssignModalOpen(false);
+    loadShipment();
   };
 
   const handleUpdateStatus = async (statusData: UpdateShipmentStatusRequest) => {
     try {
-      await shipmentService.updateStatus(Number(id), statusData);
+      if(!id ) return;
+      await shipmentService.updateStatus(id, statusData);
       setIsUpdateStatusModalOpen(false);
       loadShipment();
     } catch (error: any) {
@@ -87,6 +71,9 @@ export const ShipmentDetailsPage = () => {
     );
   }
 
+  if (!id) return null;
+
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -96,11 +83,23 @@ export const ShipmentDetailsPage = () => {
             <p className="text-gray-600 mt-2">Shipment Details</p>
           </div>
           <div className="flex gap-2">
-            {user?.role === 'Admin' && (
-              <Button onClick={() => setIsAssignDriverModalOpen(true)}>
-                <Truck className="w-4 h-4 mr-2" />
-                Assign Driver
-              </Button>
+            {user?.role === 'Admin' && !shipment.assignedDriver && (
+              <>
+                <Button 
+                  onClick={() => navigate(`/shipments/${id}/smart-assign`)}
+                  className="flex items-center gap-2"
+                >
+                  <Zap className="w-4 h-4" />
+                  Smart Assignment Page
+                </Button>
+                <Button 
+                  variant="secondary"
+                  onClick={() => setIsSmartAssignModalOpen(true)}
+                >
+                  <Truck className="w-4 h-4 mr-2" />
+                  Quick Assign
+                </Button>
+              </>
             )}
             {user?.role === 'Driver' && shipment.assignedDriver?.id === user.id && (
               <Button onClick={() => setIsUpdateStatusModalOpen(true)}>Update Status</Button>
@@ -130,10 +129,20 @@ export const ShipmentDetailsPage = () => {
               <div>
                 <p className="text-sm text-gray-600">Origin Address</p>
                 <p className="font-semibold">{shipment.originAddress}</p>
+                {(shipment.originCity || shipment.originRegion) && (
+                  <p className="text-sm text-gray-500">
+                    {[shipment.originCity, shipment.originRegion].filter(Boolean).join(', ')}
+                  </p>
+                )}
               </div>
               <div>
                 <p className="text-sm text-gray-600">Destination Address</p>
                 <p className="font-semibold">{shipment.destinationAddress}</p>
+                {(shipment.destinationCity || shipment.destinationRegion) && (
+                  <p className="text-sm text-gray-500">
+                    {[shipment.destinationCity, shipment.destinationRegion].filter(Boolean).join(', ')}
+                  </p>
+                )}
               </div>
               {shipment.assignedDriver && (
                 <div>
@@ -197,11 +206,11 @@ export const ShipmentDetailsPage = () => {
           </Card>
         </div>
 
-        <AssignDriverModal
-          isOpen={isAssignDriverModalOpen}
-          onClose={() => setIsAssignDriverModalOpen(false)}
-          drivers={drivers}
-          onAssign={handleAssignDriver}
+        <SmartDriverAssignmentModal
+          isOpen={isSmartAssignModalOpen}
+          onClose={() => setIsSmartAssignModalOpen(false)}
+          shipmentId={id}
+          onAssigned={handleDriverAssigned}
         />
 
         <UpdateStatusModal
@@ -211,53 +220,6 @@ export const ShipmentDetailsPage = () => {
         />
       </div>
     </Layout>
-  );
-};
-
-interface AssignDriverModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  drivers: User[];
-  onAssign: (driverId: number) => void;
-}
-
-const AssignDriverModal = ({ isOpen, onClose, drivers, onAssign }: AssignDriverModalProps) => {
-  const [selectedDriver, setSelectedDriver] = useState<number>(0);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (selectedDriver) {
-      onAssign(selectedDriver);
-    }
-  };
-
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Assign Driver">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Select Driver</label>
-          <select
-            value={selectedDriver}
-            onChange={(e) => setSelectedDriver(Number(e.target.value))}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          >
-            <option value="">Choose a driver</option>
-            {drivers.map((driver) => (
-              <option key={driver.id} value={driver.id}>
-                {driver.fullName} - {driver.email}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex gap-2 justify-end">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit">Assign</Button>
-        </div>
-      </form>
-    </Modal>
   );
 };
 

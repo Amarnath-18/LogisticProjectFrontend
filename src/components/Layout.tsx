@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Package, LogOut, User, BarChart3, Users, Home, Menu, X } from 'lucide-react';
+import { Package, LogOut, User, BarChart3, Users, Home, Menu, X, Settings, Truck } from 'lucide-react';
 import { Button } from './Button';
 
 interface LayoutProps {
@@ -57,6 +57,13 @@ export const Layout = ({ children }: LayoutProps) => {
                       <span>Users</span>
                     </Link>
                     <Link
+                      to="/drivers"
+                      className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+                    >
+                      <Truck className="w-4 h-4" />
+                      <span>Drivers</span>
+                    </Link>
+                    <Link
                       to="/reports"
                       className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
                     >
@@ -72,6 +79,14 @@ export const Layout = ({ children }: LayoutProps) => {
                 >
                   <Package className="w-4 h-4" />
                   <span>Shipments</span>
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Settings className="w-4 h-4" />
+                  <span>Profile</span>
                 </Link>
               </div>
             )}
@@ -140,6 +155,14 @@ export const Layout = ({ children }: LayoutProps) => {
                       <span>Users</span>
                     </Link>
                     <Link
+                      to="/drivers"
+                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Truck className="w-5 h-5" />
+                      <span>Drivers</span>
+                    </Link>
+                    <Link
                       to="/reports"
                       className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
                       onClick={() => setIsMobileMenuOpen(false)}
@@ -157,6 +180,15 @@ export const Layout = ({ children }: LayoutProps) => {
                 >
                   <Package className="w-5 h-5" />
                   <span>Shipments</span>
+                </Link>
+
+                <Link
+                  to="/profile"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Settings className="w-5 h-5" />
+                  <span>Profile</span>
                 </Link>
 
                 {/* Mobile user section */}

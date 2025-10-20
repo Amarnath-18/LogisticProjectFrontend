@@ -4,8 +4,8 @@ import { ModularLocationPicker } from './ModularLocationPicker';
 interface AddressFieldGroupProps {
   originAddress: string;
   destinationAddress: string;
-  onOriginChange: (address: string, lat?: number, lng?: number) => void;
-  onDestinationChange: (address: string, lat?: number, lng?: number) => void;
+  onOriginChange: (address: string) => void;
+  onDestinationChange: (address: string) => void;
 }
 
 export const AddressFieldGroup: React.FC<AddressFieldGroupProps> = ({
@@ -14,12 +14,12 @@ export const AddressFieldGroup: React.FC<AddressFieldGroupProps> = ({
   onOriginChange,
   onDestinationChange,
 }) => {
-  const handleOriginChange = (address: string, lat?: number, lng?: number) => {
-    onOriginChange(address, lat, lng);
+  const handleOriginChange = (address: string) => {
+    onOriginChange(address);
   };
 
-  const handleDestinationChange = (address: string, lat?: number, lng?: number) => {
-    onDestinationChange(address, lat, lng);
+  const handleDestinationChange = (address: string) => {
+    onDestinationChange(address);
   };
 
   return (

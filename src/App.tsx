@@ -9,6 +9,9 @@ import { ShipmentsPage } from './pages/ShipmentsPage';
 import { ShipmentDetailsPage } from './pages/ShipmentDetailsPage';
 import { UsersPage } from './pages/UsersPage';
 import { ReportsPage } from './pages/ReportsPage';
+import { ProfilePage } from './pages/ProfilePage';
+import { AvailableDriversPage } from './pages/AvailableDriversPage';
+import { SmartAssignmentPage } from './pages/SmartAssignmentPage';
 
 function App() {
   return (
@@ -47,6 +50,24 @@ function App() {
         />
 
         <Route
+          path="/shipments/:shipmentId/smart-assign"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <SmartAssignmentPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/drivers"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AvailableDriversPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
           path="/users"
           element={
             <ProtectedRoute allowedRoles={['Admin']}>
@@ -60,6 +81,15 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['Admin']}>
               <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
             </ProtectedRoute>
           }
         />

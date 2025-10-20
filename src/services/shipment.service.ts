@@ -1,5 +1,13 @@
 import { api } from './api';
-import { Shipment, CreateShipmentRequest, UpdateShipmentStatusRequest, AssignDriverRequest } from '../types';
+import { 
+  Shipment, 
+  CreateShipmentRequest, 
+  UpdateShipmentStatusRequest, 
+  AssignDriverRequest,
+  DriverRecommendation,
+  DriverAvailability,
+  SmartAssignRequest
+} from '../types';
 
 export const shipmentService = {
   getAllShipments: async (): Promise<Shipment[]> => {
@@ -22,11 +30,30 @@ export const shipmentService = {
     return response.data;
   },
 
-  assignDriver: async (id: number, data: AssignDriverRequest): Promise<void> => {
+  assignDriver: async (id: string, data: AssignDriverRequest): Promise<void> => {
     await api.put(`/Shipments/${id}/assign-driver`, data);
   },
 
-  updateStatus: async (id: number, data: UpdateShipmentStatusRequest): Promise<void> => {
+  updateStatus: async (id: string, data: UpdateShipmentStatusRequest): Promise<void> => {
     await api.put(`/Shipments/${id}/status`, data);
+  },
+
+  getDriverRecommendations: async (
+    id: string, 
+    priority?: 'Distance' | 'Experience' | 'Rating' | 'Availability' | 'Balanced'
+  ): Promise<DriverRecommendation[]> => {
+    const params = priority ? `?priority=${priority}` : '';
+    const response = await api.get(`/Shipments/${id}/driver-recommendations${params}`);
+    return response.data;
+  },
+
+  smartAssign: async (id: string, data: SmartAssignRequest): Promise<DriverRecommendation | DriverRecommendation[]> => {
+    const response = await api.post(`/Shipments/${id}/smart-assign`, data);
+    return response.data;
+  },
+
+  getAvailableDrivers: async (): Promise<DriverAvailability[]> => {
+    const response = await api.get('/Shipments/available-drivers');
+    return response.data;
   },
 };

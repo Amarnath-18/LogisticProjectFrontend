@@ -2,12 +2,11 @@ import React, { useRef, useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from './Button';
 import { Input } from './Input';
-import { geocodingService } from '../services/geocoding.service';
 
 interface AddressSearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  onLocationSelect: (address: string, lat: number, lng: number) => void;
+  onLocationSelect: (address: string) => void;
   placeholder?: string;
   required?: boolean;
   label?: string;
@@ -30,19 +29,17 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
     try {
       setIsSearching(true);
       
-      // Use free geocoding services
-      const results = await geocodingService.smartGeocode(value);
-
-      if (results.length > 0) {
-        const result = results[0];
-        onChange(result.address);
-        onLocationSelect(result.address, result.lat, result.lng);
+      // Simply validate the address format and call onLocationSelect
+      // Remove geocoding as we're not using coordinates anymore
+      if (value.trim().length > 5) {
+        onChange(value.trim());
+        onLocationSelect(value.trim());
       } else {
-        alert('Location not found. Please try a different address.');
+        alert('Please enter a more detailed address.');
       }
     } catch (error) {
-      console.error('Geocoding error:', error);
-      alert('Error searching for location. Please try again.');
+      console.error('Address validation error:', error);
+      alert('Error validating address. Please try again.');
     } finally {
       setIsSearching(false);
     }
@@ -93,7 +90,7 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
       
       {/* Info message */}
       <div className="mt-1 text-xs text-gray-500">
-        <span>Enter an address and click Search to get coordinates</span>
+        <span>Enter a detailed address and click Search to validate</span>
       </div>
     </div>
   );

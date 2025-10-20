@@ -4,6 +4,7 @@ import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
+import { DriverProfileManagement } from '../components/DriverProfileManagement';
 import { Shipment } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { Package, TrendingUp, MapPin } from 'lucide-react';
@@ -77,6 +78,9 @@ export const DriverDashboard = () => {
             </div>
           </Card>
         </div>
+
+        {/* Driver Profile Management Section */}
+        <DriverProfileManagement onProfileUpdated={loadShipments} />
 
         <Card title="Active Shipments">
           {loading ? (
