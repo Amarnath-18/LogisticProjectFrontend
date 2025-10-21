@@ -5,7 +5,7 @@ export type ShipmentStatus = 'Created' | 'PickedUp' | 'InTransit' | 'Delivered' 
 export type ReportType = 'Daily' | 'Weekly' | 'Monthly' | 'Custom';
 
 export interface User {
-  id: number;
+  id: string;
   fullName: string;
   email: string;
   phone?: string;
@@ -14,7 +14,7 @@ export interface User {
 }
 
 export interface TrackingUpdate {
-  id: number;
+  id: string;
   status: ShipmentStatus;
   location?: string;
   remarks?: string;
@@ -23,7 +23,7 @@ export interface TrackingUpdate {
 }
 
 export interface Shipment {
-  id: number;
+  id: string;
   trackingNumber: string;
   sender: User;
   receiverName: string;
@@ -81,7 +81,7 @@ export interface UpdateShipmentStatusRequest {
 }
 
 export interface AssignDriverRequest {
-  driverId: number;
+  driverId: string;
 }
 
 export interface UpdateUserRequest {
@@ -117,11 +117,35 @@ export interface DriverRecommendation {
 }
 
 export interface DriverAvailability {
-  driver: User;
-  driverDetails: DriverDetails;
+  driver: {
+    id: string;
+    fullName: string;
+    email: string;
+    phone: string;
+    role: UserRole;
+    createdAt: string;
+  };
+  driverDetails: {
+    status: 'Available' | 'Busy' | 'OffDuty' | 'OnBreak';
+    currentAddress: string;
+    maxActiveShipments: number;
+    vehicleType: string;
+    licenseNumber: string;
+    isVerified: boolean;
+    lastActiveTime: string;
+    workStartTime: string;
+    workEndTime: string;
+    preferredRegion: string;
+  };
   activeShipments: number;
   isAvailable: boolean;
   availabilityReason: string;
+  rating: number;
+  completedShipments: number;
+  totalRatings: number;
+  lastLocationUpdate: string;
+  performanceCategory: string;
+  performanceFactors: string[];
 }
 
 export interface SmartAssignRequest {
@@ -172,7 +196,7 @@ export interface GenerateReportRequest {
 }
 
 export interface Report {
-  id: number;
+  id: string;
   reportType: ReportType;
   startDate: string;
   endDate: string;

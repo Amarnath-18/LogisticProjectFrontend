@@ -7,11 +7,17 @@ import { Modal } from './Modal';
 import { driverService } from '../services/driver.service';
 import { UpdateDriverProfileRequest, UpdateDriverStatusRequest, UpdateDriverLocationRequest } from '../types';
 import { Truck, MapPin, Settings, User } from 'lucide-react';
+import axios from 'axios';
+import { apiKey } from '../contraints';
 
 interface DriverProfileManagementProps {
   onProfileUpdated?: () => void;
 }
-
+interface GeoFeature {
+  properties: {
+    formatted: string;
+  };
+}
 export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = ({
   onProfileUpdated
 }) => {
@@ -19,6 +25,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [updating, setUpdating] = useState(false);
+  const [suggestions, setSuggestions] = useState<GeoFeature[]>([]);
 
   const [profileData, setProfileData] = useState<UpdateDriverProfileRequest>({
     maxActiveShipments: 5,
@@ -67,6 +74,32 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
     } finally {
       setUpdating(false);
     }
+  };
+
+  const fetchSuggestions = async (text: string) => {
+    if (!text) {
+      setSuggestions([]);
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(text)}&apiKey=${apiKey}`
+      );
+      setSuggestions(response.data.features || []);
+    } catch (error) {
+      console.error('Error fetching suggestions:', error);
+      toast.error('Failed to fetch address suggestions');
+    }
+  };
+
+  const handleLocationChange = (value: string) => {
+    setLocationData({ address: value });
+    fetchSuggestions(value);
+  };
+
+  const handleSuggestionClick = (formatted: string) => {
+    setLocationData({ address: formatted });
+    setSuggestions([]);
   };
 
   const handleUpdateLocation = async (e: React.FormEvent) => {
@@ -278,29 +311,33 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
       </Modal>
 
       {/* Location Update Modal */}
-      <Modal
-        isOpen={isLocationModalOpen}
-        onClose={() => setIsLocationModalOpen(false)}
-        title="Update Current Location"
-      >
-        <form onSubmit={handleUpdateLocation} className="space-y-4">
+      <Modal isOpen={isLocationModalOpen} onClose={() => setIsLocationModalOpen(false)} title="Update Current Location">
+        <form onSubmit={handleUpdateLocation} className="space-y-4 relative">
           <Input
             label="Current Address"
             value={locationData.address}
-            onChange={(e) => setLocationData({
-              ...locationData,
-              address: e.target.value
-            })}
+            onChange={(e) => handleLocationChange(e.target.value)}
             placeholder="Enter your current address"
             required
           />
 
+          {/* Suggestions dropdown */}
+          {suggestions.length > 0 && (
+            <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-48 overflow-auto shadow-lg">
+              {suggestions.map((s, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => handleSuggestionClick(s.properties.formatted)}
+                  className="cursor-pointer px-3 py-2 hover:bg-gray-100"
+                >
+                  {s.properties.formatted}
+                </li>
+              ))}
+            </ul>
+          )}
+
           <div className="flex gap-2 justify-end pt-4">
-            <Button
-              type="button"
-              variant="secondary"
-              onClick={() => setIsLocationModalOpen(false)}
-            >
+            <Button type="button" variant="secondary" onClick={() => setIsLocationModalOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={updating}>

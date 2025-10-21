@@ -4,11 +4,21 @@ import { Search } from 'lucide-react';
 import { Button } from './Button';
 import { Input } from './Input';
 import axios from 'axios';
+import { apiKey } from '../contraints';
+
+interface AddressData {
+  formatted: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  lat?: number;
+  lon?: number;
+}
 
 interface AddressSearchInputProps {
   value: string;
   onChange: (value: string) => void;
-  onLocationSelect: (address: string) => void;
+  onLocationSelect: (data: AddressData) => void; // now sends structured data
   placeholder?: string;
   required?: boolean;
   label?: string;
@@ -17,8 +27,11 @@ interface AddressSearchInputProps {
 interface GeoFeature {
   properties: {
     formatted: string;
-    lat: number;
-    lon: number;
+    city?: string;
+    state?: string;
+    country?: string;
+    lat?: number;
+    lon?: number;
   };
 }
 
@@ -35,7 +48,6 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
   const [suggestions, setSuggestions] = useState<GeoFeature[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const apiKey = "0c1f172615d94695817090bc5e1f0824";
 
   const handleManualSearch = async () => {
     if (!value.trim()) return;
@@ -47,8 +59,6 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
       );
 
       const features = res?.data?.features || [];
-      console.log(features);
-      
       setSuggestions(features);
       setShowSuggestions(true);
 
@@ -76,9 +86,18 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
   };
 
   const handleSuggestionClick = (feature: GeoFeature) => {
-    const selectedAddress = feature.properties.formatted;
-    onChange(selectedAddress);
-    onLocationSelect(selectedAddress);
+    const props = feature.properties;
+    const selectedData: AddressData = {
+      formatted: props.formatted,
+      city: props.city,
+      state: props.state,
+      country: props.country,
+      lat: props.lat,
+      lon: props.lon,
+    };
+
+    onChange(selectedData.formatted);
+    onLocationSelect(selectedData);
     setSuggestions([]);
     setShowSuggestions(false);
   };
@@ -115,7 +134,6 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
         </Button>
       </div>
 
-      {/* Suggestions dropdown */}
       {showSuggestions && suggestions.length > 0 && (
         <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-auto shadow-lg">
           {suggestions.map((feature, index) => (

@@ -124,9 +124,50 @@ export const AvailableDriversList: React.FC<AvailableDriversListProps> = ({
                     </div>
                     <div className="flex items-center gap-1">
                       <Star className="w-4 h-4" />
-                      Active Shipments: {driverInfo.activeShipments} / {driverInfo.driverDetails.maxActiveShipments || 5}
+                      Active: {driverInfo.activeShipments} / {driverInfo.driverDetails.maxActiveShipments || 5}
                     </div>
                   </div>
+
+                  {/* New performance metrics section */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 text-sm text-gray-600 mb-3 bg-gray-50 p-3 rounded-md">
+                    <div className="flex items-center gap-1">
+                      <Star className="w-4 h-4 text-yellow-500" />
+                      Rating: {driverInfo.rating > 0 ? `${driverInfo.rating.toFixed(1)}/5` : 'No ratings'}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Truck className="w-4 h-4 text-blue-500" />
+                      Completed: {driverInfo.completedShipments}
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Award className="w-4 h-4 text-purple-500" />
+                      Reviews: {driverInfo.totalRatings}
+                    </div>
+                  </div>
+
+                  {/* Performance category and factors */}
+                  {driverInfo.performanceCategory && (
+                    <div className="mb-2">
+                      <span className="inline-block px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                        Performance: {driverInfo.performanceCategory}
+                      </span>
+                    </div>
+                  )}
+
+                  {driverInfo.performanceFactors && driverInfo.performanceFactors.length > 0 && (
+                    <div className="mb-3">
+                      <div className="text-xs text-gray-500 mb-1">Performance Factors:</div>
+                      <div className="flex flex-wrap gap-1">
+                        {driverInfo.performanceFactors.map((factor, index) => (
+                          <span
+                            key={index}
+                            className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                          >
+                            {factor}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
 
                   <div className="text-sm">
                     <p className="text-gray-600">
@@ -156,11 +197,18 @@ export const AvailableDriversList: React.FC<AvailableDriversListProps> = ({
                     </div>
                   )}
 
-                  {driverInfo.driverDetails.lastActiveTime && (
-                    <div className="mt-2 text-xs text-gray-500">
-                      Last active: {new Date(driverInfo.driverDetails.lastActiveTime).toLocaleString()}
-                    </div>
-                  )}
+                  <div className="mt-2 space-y-1">
+                    {driverInfo.driverDetails.lastActiveTime && (
+                      <div className="text-xs text-gray-500">
+                        Last active: {new Date(driverInfo.driverDetails.lastActiveTime).toLocaleString()}
+                      </div>
+                    )}
+                    {driverInfo.lastLocationUpdate && (
+                      <div className="text-xs text-gray-500">
+                        Last location update: {new Date(driverInfo.lastLocationUpdate).toLocaleString()}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {showActions && onDriverSelect && (

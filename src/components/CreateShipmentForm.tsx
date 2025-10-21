@@ -56,19 +56,25 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
     onClose();
   };
 
-  const handleOriginChange = (address: string) => {
-    setFormData(prev => ({
-      ...prev,
-      originAddress: address
-    }));
-  };
+  const handleOriginChange = (address: string, city?: string, state?: string) => {
+  setFormData(prev => ({
+    ...prev,
+    originAddress: address,
+    originCity: city || prev.originCity,
+    originRegion: state || prev.originRegion
+  }));
+};
 
-  const handleDestinationChange = (address: string) => {
-    setFormData(prev => ({
-      ...prev,
-      destinationAddress: address
-    }));
-  };
+const handleDestinationChange = (address: string, city?: string, state?: string) => {
+  setFormData(prev => ({
+    ...prev,
+    destinationAddress: address,
+    destinationCity: city || prev.destinationCity,
+    destinationRegion: state || prev.destinationRegion
+  }));
+};
+
+  
 
   return (
     <Modal isOpen={isOpen} onClose={handleClose} title="Create New Shipment">

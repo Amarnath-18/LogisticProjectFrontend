@@ -166,6 +166,58 @@ export const AvailableDriversPage = () => {
                     </div>
                   </div>
 
+                  {/* Performance Metrics Section */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <h4 className="text-sm font-medium text-gray-900 mb-3">Performance Metrics</h4>
+                    <div className="space-y-3">
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Rating</span>
+                        <span className="text-sm font-medium">
+                          {selectedDriver.rating > 0 ? `${selectedDriver.rating.toFixed(1)}/5 (${selectedDriver.totalRatings} reviews)` : 'No ratings yet'}
+                        </span>
+                      </div>
+
+                      <div className="flex justify-between">
+                        <span className="text-sm text-gray-600">Completed Shipments</span>
+                        <span className="text-sm font-medium">{selectedDriver.completedShipments}</span>
+                      </div>
+
+                      {selectedDriver.performanceCategory && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">Performance Category</span>
+                          <span className="text-sm font-medium text-blue-600">
+                            {selectedDriver.performanceCategory}
+                          </span>
+                        </div>
+                      )}
+
+                      {selectedDriver.performanceFactors && selectedDriver.performanceFactors.length > 0 && (
+                        <div>
+                          <span className="text-sm text-gray-600 block mb-2">Performance Factors</span>
+                          <div className="flex flex-wrap gap-1">
+                            {selectedDriver.performanceFactors.map((factor, index) => (
+                              <span
+                                key={index}
+                                className="inline-block px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full"
+                              >
+                                {factor}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedDriver.lastLocationUpdate && (
+                        <div className="flex justify-between">
+                          <span className="text-sm text-gray-600">Last Location Update</span>
+                          <span className="text-sm font-medium">
+                            {new Date(selectedDriver.lastLocationUpdate).toLocaleString()}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-600 mb-2">Availability Status:</p>
                     <p className="text-sm font-medium text-blue-600">
