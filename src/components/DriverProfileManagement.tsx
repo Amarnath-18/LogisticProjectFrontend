@@ -151,10 +151,11 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
         <form onSubmit={handleUpdateProfile} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
+              required
               label="Max Active Shipments"
               type="number"
               min="1"
-              max="10"
+              max="5"
               value={profileData.maxActiveShipments || ''}
               onChange={(e) => setProfileData({
                 ...profileData,
@@ -162,6 +163,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
               })}
             />
             <Input
+            required
               label="Vehicle Type"
               value={profileData.vehicleType || ''}
               onChange={(e) => setProfileData({
@@ -174,6 +176,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
+              required
               label="License Number"
               value={profileData.licenseNumber || ''}
               onChange={(e) => setProfileData({
@@ -183,6 +186,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
               placeholder="Driver license number"
             />
             <Input
+              required
               label="Preferred Region"
               value={profileData.preferredRegion || ''}
               onChange={(e) => setProfileData({
@@ -195,6 +199,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
+              required
               label="Work Start Time"
               type="time"
               value={profileData.workStartTime || ''}
@@ -204,6 +209,7 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
               })}
             />
             <Input
+              required
               label="Work End Time"
               type="time"
               value={profileData.workEndTime || ''}

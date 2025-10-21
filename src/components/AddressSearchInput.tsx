@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import { Search } from 'lucide-react';
 import { Button } from './Button';
 import { Input } from './Input';
+import axios from 'axios';
 
 interface AddressSearchInputProps {
   value: string;
@@ -11,6 +12,14 @@ interface AddressSearchInputProps {
   placeholder?: string;
   required?: boolean;
   label?: string;
+}
+
+interface GeoFeature {
+  properties: {
+    formatted: string;
+    lat: number;
+    lon: number;
+  };
 }
 
 export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
@@ -23,24 +32,32 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [suggestions, setSuggestions] = useState<GeoFeature[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  const apiKey = "0c1f172615d94695817090bc5e1f0824";
 
   const handleManualSearch = async () => {
     if (!value.trim()) return;
 
     try {
       setIsSearching(true);
+      const res = await axios.get(
+        `https://api.geoapify.com/v1/geocode/autocomplete?text=${encodeURIComponent(value)}&apiKey=${apiKey}`
+      );
+
+      const features = res?.data?.features || [];
+      console.log(features);
       
-      // Simply validate the address format and call onLocationSelect
-      // Remove geocoding as we're not using coordinates anymore
-      if (value.trim().length > 5) {
-        onChange(value.trim());
-        onLocationSelect(value.trim());
-      } else {
-        toast.error('Please enter a more detailed address.');
+      setSuggestions(features);
+      setShowSuggestions(true);
+
+      if (features.length === 0) {
+        toast.error("No results found. Try a more specific address.");
       }
     } catch (error) {
-      console.error('Address validation error:', error);
-      toast.error('Error validating address. Please try again.');
+      console.error("Address validation error:", error);
+      toast.error("Error validating address. Please try again.");
     } finally {
       setIsSearching(false);
     }
@@ -48,17 +65,26 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(e.target.value);
+    if (suggestions.length > 0) setShowSuggestions(false);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       handleManualSearch();
     }
   };
 
+  const handleSuggestionClick = (feature: GeoFeature) => {
+    const selectedAddress = feature.properties.formatted;
+    onChange(selectedAddress);
+    onLocationSelect(selectedAddress);
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
   return (
-    <div className="w-full">
+    <div className="w-full relative">
       {label && (
         <label className="block text-sm font-medium text-gray-700 mb-1">
           {label} {required && <span className="text-red-500">*</span>}
@@ -85,11 +111,25 @@ export const AddressSearchInput: React.FC<AddressSearchInputProps> = ({
           title="Search address"
         >
           <Search className="w-4 h-4 mr-1" />
-          {isSearching ? 'Searching...' : 'Search'}
+          {isSearching ? "Searching..." : "Search"}
         </Button>
       </div>
-      
-      {/* Info message */}
+
+      {/* Suggestions dropdown */}
+      {showSuggestions && suggestions.length > 0 && (
+        <ul className="absolute z-10 bg-white border border-gray-300 rounded-md mt-1 w-full max-h-48 overflow-auto shadow-lg">
+          {suggestions.map((feature, index) => (
+            <li
+              key={index}
+              onClick={() => handleSuggestionClick(feature)}
+              className="px-3 py-2 cursor-pointer hover:bg-gray-100 text-sm text-gray-700"
+            >
+              {feature.properties.formatted}
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="mt-1 text-xs text-gray-500">
         <span>Enter a detailed address and click Search to validate</span>
       </div>

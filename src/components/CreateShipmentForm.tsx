@@ -78,11 +78,6 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
             <strong>Current User Role:</strong> {user?.role || 'Not logged in'} | 
             <strong> User:</strong> {user?.fullName || 'Unknown'}
           </p>
-          <p className="text-xs text-blue-600 mt-1">
-            {user?.role === 'Customer' 
-              ? '✅ Map picker enabled for customers' 
-              : '❌ Map picker only available for customers'}
-          </p>
         </div>
       )}
       
