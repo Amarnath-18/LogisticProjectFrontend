@@ -6,6 +6,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
 import { CreateShipmentForm } from '../components/CreateShipmentForm';
+import { PendingRatingsCard } from '../components/PendingRatingsCard';
 import { Shipment, CreateShipmentRequest } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { Package, Plus, Clock, CheckCircle } from 'lucide-react';
@@ -101,6 +102,8 @@ export const CustomerDashboard = () => {
             </div>
           </Card>
         </div>
+
+        <PendingRatingsCard />
 
         <Card title="Your Shipments">
           {loading ? (

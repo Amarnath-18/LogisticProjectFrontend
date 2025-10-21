@@ -106,14 +106,14 @@ function App() {
             color: '#fff',
           },
           success: {
-            duration: 3000,
+            duration: 2000,
             iconTheme: {
               primary: '#4ade80',
               secondary: '#fff',
             },
           },
           error: {
-            duration: 5000,
+            duration: 3000,
             iconTheme: {
               primary: '#ef4444',
               secondary: '#fff',

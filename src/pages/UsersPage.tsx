@@ -5,7 +5,7 @@ import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { User, UserRole } from '../types';
 import { userService } from '../services/user.service';
-import { Trash2, Edit } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 
 export const UsersPage = () => {
   const [users, setUsers] = useState<User[]>([]);

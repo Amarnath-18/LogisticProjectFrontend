@@ -8,7 +8,9 @@ import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
 import { SmartDriverAssignmentModal } from '../components/SmartDriverAssignmentModal';
+import { DriverRatingModal } from '../components/DriverRatingModal';
 import { Shipment, UpdateShipmentStatusRequest, ShipmentStatus } from '../types';
+import { useShipmentRating } from '../hooks/useShipmentRating';
 import { shipmentService } from '../services/shipment.service';
 import { useAuth } from '../context/AuthContext';
 import { MapPin, Clock, Truck, Zap } from 'lucide-react';
@@ -20,7 +22,11 @@ export const ShipmentDetailsPage = () => {
   const [loading, setLoading] = useState(true);
   const [isSmartAssignModalOpen, setIsSmartAssignModalOpen] = useState(false);
   const [isUpdateStatusModalOpen, setIsUpdateStatusModalOpen] = useState(false);
+  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const { user } = useAuth();
+  
+  // Use the rating hook to check if shipment is already rated
+  const { ratingStatus, isLoading: isLoadingRating, markAsRated } = useShipmentRating(id || '');
   
   useEffect(() => {
     loadShipment();
@@ -41,6 +47,16 @@ export const ShipmentDetailsPage = () => {
   const handleDriverAssigned = () => {
     setIsSmartAssignModalOpen(false);
     loadShipment();
+  };
+
+  const handleRatingSubmitted = (rating?: number, comment?: string) => {
+    toast.success('Thank you for rating the driver! Your feedback helps us improve our service.');
+    setIsRatingModalOpen(false);
+    
+    // Update the local rating status to immediately reflect the change
+    if (rating) {
+      markAsRated(rating, comment);
+    }
   };
 
   const handleUpdateStatus = async (statusData: UpdateShipmentStatusRequest) => {
@@ -105,6 +121,31 @@ export const ShipmentDetailsPage = () => {
             {user?.role === 'Driver' && shipment.assignedDriver?.id === user.id && (
               <Button onClick={() => setIsUpdateStatusModalOpen(true)}>Update Status</Button>
             )}
+            {user?.role === 'Customer' && shipment.status === 'Delivered' && shipment.assignedDriver && (
+              <>
+                {!isLoadingRating && ratingStatus && !ratingStatus.isRated && ratingStatus.canBeRated && (
+                  <Button 
+                    onClick={() => setIsRatingModalOpen(true)}
+                    className="flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700"
+                  >
+                    ⭐ Rate Driver
+                  </Button>
+                )}
+                {!isLoadingRating && ratingStatus && ratingStatus.isRated && (
+                  <div className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-800 rounded-lg">
+                    <span>✓ Already Rated</span>
+                    {ratingStatus.existingRating && (
+                      <span>({ratingStatus.existingRating.rating}/5 ⭐)</span>
+                    )}
+                  </div>
+                )}
+                {!isLoadingRating && ratingStatus && !ratingStatus.canBeRated && (
+                  <div className="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">
+                    {ratingStatus.ratingIneligibilityReason || 'Cannot be rated'}
+                  </div>
+                )}
+              </>
+            )}
           </div>
         </div>
 
@@ -150,6 +191,39 @@ export const ShipmentDetailsPage = () => {
                   <p className="text-sm text-gray-600">Assigned Driver</p>
                   <p className="font-semibold">{shipment.assignedDriver.fullName}</p>
                   <p className="text-sm text-gray-500">{shipment.assignedDriver.email}</p>
+                  {user?.role === 'Customer' && shipment.status === 'Delivered' && !isLoadingRating && (
+                    <div className="mt-2">
+                      {ratingStatus && !ratingStatus.isRated && ratingStatus.canBeRated && (
+                        <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+                          <p className="text-sm text-yellow-800">
+                            📝 Your package has been delivered! Please take a moment to rate your driver's service.
+                          </p>
+                        </div>
+                      )}
+                      {ratingStatus && ratingStatus.isRated && ratingStatus.existingRating && (
+                        <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                          <p className="text-sm text-green-800 font-medium">
+                            ✓ You rated this delivery: {ratingStatus.existingRating.rating}/5 ⭐
+                          </p>
+                          {ratingStatus.existingRating.comment && (
+                            <p className="text-sm text-green-700 mt-1">
+                              "{ratingStatus.existingRating.comment}"
+                            </p>
+                          )}
+                          <p className="text-xs text-green-600 mt-1">
+                            Rated on {new Date(ratingStatus.existingRating.ratedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      )}
+                      {ratingStatus && !ratingStatus.canBeRated && (
+                        <div className="p-3 bg-gray-50 border border-gray-200 rounded-lg">
+                          <p className="text-sm text-gray-700">
+                            {ratingStatus.ratingIneligibilityReason || 'This delivery cannot be rated at this time.'}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
               <div className="grid grid-cols-2 gap-4">
@@ -219,6 +293,17 @@ export const ShipmentDetailsPage = () => {
           onClose={() => setIsUpdateStatusModalOpen(false)}
           onUpdate={handleUpdateStatus}
         />
+
+        {shipment.assignedDriver && (
+          <DriverRatingModal
+            isOpen={isRatingModalOpen}
+            onClose={() => setIsRatingModalOpen(false)}
+            driverId={shipment.assignedDriver.id.toString()}
+            driverName={shipment.assignedDriver.fullName}
+            shipmentId={shipment.id.toString()}
+            onRatingSubmitted={handleRatingSubmitted}
+          />
+        )}
       </div>
     </Layout>
   );

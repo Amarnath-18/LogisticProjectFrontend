@@ -27,6 +27,9 @@ export const AdminDashboard = () => {
     }
   };
 
+  console.log(analytics);
+  
+
   if (loading) {
     return (
       <Layout>

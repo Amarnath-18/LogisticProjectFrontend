@@ -40,6 +40,13 @@ export interface Shipment {
   createdAt: string;
   updatedAt: string;
   trackingUpdates?: TrackingUpdate[];
+  // Rating information
+  isRatedByCustomer?: boolean;
+  customerRating?: {
+    rating: number;
+    comment?: string;
+    ratedAt: string;
+  };
 }
 
 export interface RegisterRequest {
@@ -172,4 +179,58 @@ export interface Report {
   filePath: string;
   generatedAt: string;
   generatedBy: User;
+}
+
+export interface RateDriverRequest {
+  rating: number;
+  comment?: string;
+  shipmentId: string;
+}
+
+export interface DriverRating {
+  rating: number;
+  comment?: string;
+  ratedAt: string;
+  ratedByCustomer: string;
+  shipmentTrackingNumber: string;
+}
+
+export interface DriverRatingsResponse {
+  driverId: string;
+  driver: {
+    id: string;
+    fullName: string;
+    email: string;
+    phone?: string;
+    role: UserRole;
+    createdAt: string;
+  };
+  averageRating: number;
+  totalRatings: number;
+  completedShipments: number;
+  isVerified: boolean;
+  recentRatings: DriverRating[];
+}
+
+export interface ShipmentRatingStatusResponse {
+  shipmentId: string;
+  trackingNumber: string;
+  isRated: boolean;
+  existingRating?: {
+    rating: number;
+    comment?: string;
+    ratedAt: string;
+    ratedByCustomer: string;
+    shipmentTrackingNumber: string;
+  };
+  driver?: {
+    id: string;
+    fullName: string;
+    email: string;
+    phone?: string;
+    role: UserRole;
+    createdAt: string;
+  };
+  canBeRated: boolean;
+  ratingIneligibilityReason?: string;
 }

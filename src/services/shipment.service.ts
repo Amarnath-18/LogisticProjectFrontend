@@ -6,7 +6,8 @@ import {
   AssignDriverRequest,
   DriverRecommendation,
   DriverAvailability,
-  SmartAssignRequest
+  SmartAssignRequest,
+  ShipmentRatingStatusResponse
 } from '../types';
 
 export const shipmentService = {
@@ -54,6 +55,11 @@ export const shipmentService = {
 
   getAvailableDrivers: async (): Promise<DriverAvailability[]> => {
     const response = await api.get('/Shipments/available-drivers');
+    return response.data;
+  },
+
+  getRatingStatus: async (shipmentId: string): Promise<ShipmentRatingStatusResponse> => {
+    const response = await api.get(`/Shipments/${shipmentId}/rating-status`);
     return response.data;
   },
 };

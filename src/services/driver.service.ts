@@ -4,7 +4,9 @@ import {
   UpdateDriverStatusRequest,
   UpdateDriverProfileRequest,
   DriverAvailability,
-  User
+  User,
+  RateDriverRequest,
+  DriverRatingsResponse
 } from '../types';
 
 export const driverService = {
@@ -36,6 +38,15 @@ export const driverService = {
 
   getDriverById: async (id: string): Promise<User> => {
     const response = await api.get(`/Drivers/${id}`);
+    return response.data;
+  },
+
+  rateDriver: async (driverId: string, data: RateDriverRequest): Promise<void> => {
+    await api.post(`/Drivers/${driverId}/rate`, data);
+  },
+
+  getDriverRatings: async (driverId: string): Promise<DriverRatingsResponse> => {
+    const response = await api.get(`/Drivers/${driverId}/ratings`);
     return response.data;
   },
 };
