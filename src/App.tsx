@@ -13,14 +13,18 @@ import { ReportsPage } from './pages/ReportsPage';
 import { ProfilePage } from './pages/ProfilePage';
 import { AvailableDriversPage } from './pages/AvailableDriversPage';
 import { SmartAssignmentPage } from './pages/SmartAssignmentPage';
+import AuthProtector from './components/AuthProtector';
 
 function App() {
   return (
     <AuthProvider>
       <Router>
       <Routes>
-        
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={
+          <AuthProtector>
+            <Login />
+          </AuthProtector>
+          } />
         <Route path="/register" element={<Register />} />
         <Route path="/track" element={<TrackShipment />} />
 
