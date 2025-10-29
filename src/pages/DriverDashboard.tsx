@@ -32,6 +32,8 @@ export const DriverDashboard = () => {
     (s) => s.status !== 'Delivered' && s.status !== 'Cancelled'
   );
   const deliveredShipments = shipments.filter((s) => s.status === 'Delivered');
+  console.log(shipments);
+  
 
   return (
     <Layout>
