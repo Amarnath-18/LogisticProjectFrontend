@@ -12,7 +12,7 @@ export const reportService = {
     return response.data;
   },
 
-  downloadReport: async (id: number): Promise<Blob> => {
+  downloadReport: async (id: string): Promise<Blob> => {
     const response = await api.get(`/Reports/${id}/download`, {
       responseType: 'blob',
     });

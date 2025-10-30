@@ -7,16 +7,16 @@ export const userService = {
     return response.data;
   },
 
-  getUserById: async (id: number): Promise<User> => {
+  getUserById: async (id: string): Promise<User> => {
     const response = await api.get(`/Users/${id}`);
     return response.data;
   },
 
-  updateUser: async (id: number, data: UpdateUserRequest): Promise<void> => {
+  updateUser: async (id: string, data: UpdateUserRequest): Promise<void> => {
     await api.put(`/Users/${id}`, data);
   },
 
-  deleteUser: async (id: number): Promise<void> => {
+  deleteUser: async (id: string): Promise<void> => {
     await api.delete(`/Users/${id}`);
   },
 
