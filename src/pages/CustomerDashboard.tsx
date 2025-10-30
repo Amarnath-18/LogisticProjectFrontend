@@ -15,6 +15,7 @@ export const CustomerDashboard = () => {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreatingShipment, setIsCreatingShipment] = useState(false);
 
   useEffect(() => {
     loadShipments();
@@ -33,11 +34,15 @@ export const CustomerDashboard = () => {
 
   const handleCreateShipment = async (formData: CreateShipmentRequest) => {
     try {
+      setIsCreatingShipment(true);
       await shipmentService.createShipment(formData);
+      toast.success('Shipment created successfully!');
       setIsCreateModalOpen(false);
       loadShipments();
     } catch (error: any) {
       toast.error(error.response?.data || 'Failed to create shipment');
+    } finally {
+      setIsCreatingShipment(false);
     }
   };
 
@@ -204,6 +209,7 @@ export const CustomerDashboard = () => {
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
           onCreate={handleCreateShipment}
+          isLoading={isCreatingShipment}
         />
       </div>
     </Layout>

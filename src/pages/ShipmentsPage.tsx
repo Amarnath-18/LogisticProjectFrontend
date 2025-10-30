@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
@@ -9,14 +9,14 @@ import { CreateShipmentForm } from '../components/CreateShipmentForm';
 import { Shipment, CreateShipmentRequest } from '../types';
 import { shipmentService } from '../services/shipment.service';
 import { useAuth } from '../context/AuthContext';
-import { Plus, Eye, Zap } from 'lucide-react';
+import { Plus, Eye } from 'lucide-react';
 
 export const ShipmentsPage = () => {
   const [shipments, setShipments] = useState<Shipment[]>([]);
   const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreatingShipment, setIsCreatingShipment] = useState(false);
   const { user } = useAuth();
-  const navigate = useNavigate();
 
   useEffect(() => {
     loadShipments();
@@ -35,11 +35,15 @@ export const ShipmentsPage = () => {
 
   const handleCreateShipment = async (formData: CreateShipmentRequest) => {
     try {
+      setIsCreatingShipment(true);
       await shipmentService.createShipment(formData);
+      toast.success('Shipment created successfully!');
       setIsCreateModalOpen(false);
       loadShipments();
     } catch (error: any) {
       toast.error(error.response?.data || 'Failed to create shipment');
+    } finally {
+      setIsCreatingShipment(false);
     }
   };
 
@@ -123,16 +127,7 @@ export const ShipmentsPage = () => {
                               View
                             </Button>
                           </Link>
-                          {user?.role === 'Admin' && !shipment.assignedDriver && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => navigate(`/shipments/${shipment.id}/smart-assign`)}
-                              className="flex items-center gap-1"
-                            >
-                              <Zap className="w-4 h-4" />
-                              Assign
-                            </Button>
-                          )}
+
                         </div>
                       </td>
                     </tr>
@@ -151,6 +146,7 @@ export const ShipmentsPage = () => {
           onClose={() => setIsCreateModalOpen(false)}
           onCreate={handleCreateShipment}
           showDebugInfo={true}
+          isLoading={isCreatingShipment}
         />
       </div>
     </Layout>

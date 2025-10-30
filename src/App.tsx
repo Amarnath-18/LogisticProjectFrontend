@@ -11,8 +11,7 @@ import { ShipmentDetailsPage } from './pages/ShipmentDetailsPage';
 import { UsersPage } from './pages/UsersPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { ProfilePage } from './pages/ProfilePage';
-import { AvailableDriversPage } from './pages/AvailableDriversPage';
-import { SmartAssignmentPage } from './pages/SmartAssignmentPage';
+
 import AuthProtector from './components/AuthProtector';
 
 function App() {
@@ -51,24 +50,6 @@ function App() {
           element={
             <ProtectedRoute>
               <ShipmentDetailsPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/shipments/:shipmentId/smart-assign"
-          element={
-            <ProtectedRoute allowedRoles={['Admin']}>
-              <SmartAssignmentPage />
-            </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/drivers"
-          element={
-            <ProtectedRoute allowedRoles={['Admin']}>
-              <AvailableDriversPage />
             </ProtectedRoute>
           }
         />

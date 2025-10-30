@@ -11,13 +11,15 @@ interface CreateShipmentFormProps {
   onClose: () => void;
   onCreate: (data: CreateShipmentRequest) => void;
   showDebugInfo?: boolean;
+  isLoading?: boolean;
 }
 
 export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
   isOpen,
   onClose,
   onCreate,
-  showDebugInfo = false
+  showDebugInfo = false,
+  isLoading = false
 }) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<CreateShipmentRequest>({
@@ -30,6 +32,7 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
     originRegion: '',
     destinationCity: '',
     destinationRegion: '',
+    Priority: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -48,6 +51,7 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
       originRegion: '',
       destinationCity: '',
       destinationRegion: '',
+      Priority: '',
     });
   };
 
@@ -88,6 +92,13 @@ const handleDestinationChange = (address: string, city?: string, state?: string)
       )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
+        <fieldset disabled={isLoading} className={isLoading ? 'opacity-60' : ''}>
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
+          <p className="text-sm text-green-800">
+            📦 <strong>Automatic Driver Assignment:</strong> Once you create this shipment, a driver will be automatically assigned based on optimal criteria including location, availability, and experience.
+          </p>
+        </div>
+        
         <Input
           label="Receiver Name"
           value={formData.receiverName}
@@ -147,13 +158,53 @@ const handleDestinationChange = (address: string, city?: string, state?: string)
             placeholder="e.g. CA"
           />
         </div>
+
+        {/* Priority Selection */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Driver Assignment Priority (Optional)
+          </label>
+          <select
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            value={formData.Priority || ''}
+            onChange={(e) => setFormData({ ...formData, Priority: e.target.value })}
+          >
+            <option value="">Auto-select best driver</option>
+            <option value="Distance">Prefer closest driver</option>
+            <option value="Experience">Prefer most experienced driver</option>
+            <option value="Rating">Prefer highest-rated driver</option>
+            <option value="Availability">Prefer most available driver</option>
+            <option value="Balanced">Balanced assignment (recommended)</option>
+          </select>
+          <p className="text-xs text-gray-500 mt-1">
+            Leave empty for automatic assignment based on optimal criteria
+          </p>
+        </div>
         
         <div className="flex gap-2 justify-end">
-          <Button type="button" variant="secondary" onClick={handleClose}>
+          <Button 
+            type="button" 
+            variant="secondary" 
+            onClick={handleClose}
+            disabled={isLoading}
+          >
             Cancel
           </Button>
-          <Button type="submit">Create Shipment</Button>
+          <Button 
+            type="submit" 
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <div className="flex items-center">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                Creating...
+              </div>
+            ) : (
+              'Create Shipment'
+            )}
+          </Button>
         </div>
+        </fieldset>
       </form>
     </Modal>
   );

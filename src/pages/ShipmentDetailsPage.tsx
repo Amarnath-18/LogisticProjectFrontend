@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { Layout } from '../components/Layout';
 import { Card } from '../components/Card';
@@ -7,20 +7,18 @@ import { Button } from '../components/Button';
 import { StatusBadge } from '../components/StatusBadge';
 import { Modal } from '../components/Modal';
 import { Input } from '../components/Input';
-import { SmartDriverAssignmentModal } from '../components/SmartDriverAssignmentModal';
+
 import { DriverRatingModal } from '../components/DriverRatingModal';
 import { Shipment, UpdateShipmentStatusRequest, ShipmentStatus } from '../types';
 import { useShipmentRating } from '../hooks/useShipmentRating';
 import { shipmentService } from '../services/shipment.service';
 import { useAuth } from '../context/AuthContext';
-import { MapPin, Clock, Truck, Zap } from 'lucide-react';
+import { MapPin, Clock } from 'lucide-react';
 
 export const ShipmentDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const [shipment, setShipment] = useState<Shipment | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isSmartAssignModalOpen, setIsSmartAssignModalOpen] = useState(false);
   const [isUpdateStatusModalOpen, setIsUpdateStatusModalOpen] = useState(false);
   const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
   const { user } = useAuth();
@@ -44,10 +42,7 @@ export const ShipmentDetailsPage = () => {
     }
   };
 
-  const handleDriverAssigned = () => {
-    setIsSmartAssignModalOpen(false);
-    loadShipment();
-  };
+
 
   const handleRatingSubmitted = (rating?: number, comment?: string) => {
     toast.success('Thank you for rating the driver! Your feedback helps us improve our service.');
@@ -100,24 +95,6 @@ export const ShipmentDetailsPage = () => {
             <p className="text-gray-600 mt-2">Shipment Details</p>
           </div>
           <div className="flex gap-2">
-            {user?.role === 'Admin' && !shipment.assignedDriver && (
-              <>
-                <Button 
-                  onClick={() => navigate(`/shipments/${id}/smart-assign`)}
-                  className="flex items-center gap-2"
-                >
-                  <Zap className="w-4 h-4" />
-                  Smart Assignment Page
-                </Button>
-                <Button 
-                  variant="secondary"
-                  onClick={() => setIsSmartAssignModalOpen(true)}
-                >
-                  <Truck className="w-4 h-4 mr-2" />
-                  Quick Assign
-                </Button>
-              </>
-            )}
             {user?.role === 'Driver' && shipment.assignedDriver?.id === user.id && (
               <Button onClick={() => setIsUpdateStatusModalOpen(true)}>Update Status</Button>
             )}
@@ -281,12 +258,7 @@ export const ShipmentDetailsPage = () => {
           </Card>
         </div>
 
-        <SmartDriverAssignmentModal
-          isOpen={isSmartAssignModalOpen}
-          onClose={() => setIsSmartAssignModalOpen(false)}
-          shipmentId={id}
-          onAssigned={handleDriverAssigned}
-        />
+
 
         <UpdateStatusModal
           isOpen={isUpdateStatusModalOpen}

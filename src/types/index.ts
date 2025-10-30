@@ -72,6 +72,7 @@ export interface CreateShipmentRequest {
   originRegion?: string;
   destinationCity?: string;
   destinationRegion?: string;
+  Priority?:string
 }
 
 export interface UpdateShipmentStatusRequest {

@@ -16,8 +16,7 @@ export { UserProfileManagement } from './UserProfileManagement';
 export { DriverProfileManagement } from './DriverProfileManagement';
 
 // Driver Management Components
-export { SmartDriverAssignmentModal } from './SmartDriverAssignmentModal';
-export { AvailableDriversList } from './AvailableDriversList';
+
 export { DriverRatingModal } from './DriverRatingModal';
 export { DriverRatingsDisplay } from './DriverRatingsDisplay';
 export { PendingRatingsCard } from './PendingRatingsCard';

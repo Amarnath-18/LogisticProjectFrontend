@@ -3,8 +3,6 @@ import {
   UpdateDriverLocationRequest,
   UpdateDriverStatusRequest,
   UpdateDriverProfileRequest,
-  DriverAvailability,
-  User,
   RateDriverRequest,
   DriverRatingsResponse
 } from '../types';
@@ -22,24 +20,24 @@ export const driverService = {
     await api.put('/Drivers/profile', data);
   },
 
-  createProfile: async (): Promise<void> => {
-    await api.post('/Drivers/profile');
-  },
+  // createProfile: async (): Promise<void> => {
+  //   await api.post('/Drivers/profile');
+  // },
 
-  getAvailability: async (): Promise<DriverAvailability[]> => {
-    const response = await api.get('/Drivers/availability');
-    return response.data;
-  },
+  // getAvailability: async (): Promise<DriverAvailability[]> => {
+  //   const response = await api.get('/Drivers/availability');
+  //   return response.data;
+  // },
 
-  getAllDrivers: async (): Promise<User[]> => {
-    const response = await api.get('/Drivers');
-    return response.data;
-  },
+  // getAllDrivers: async (): Promise<User[]> => {
+  //   const response = await api.get('/Drivers');
+  //   return response.data;
+  // },
 
-  getDriverById: async (id: string): Promise<User> => {
-    const response = await api.get(`/Drivers/${id}`);
-    return response.data;
-  },
+  // getDriverById: async (id: string): Promise<User> => {
+  //   const response = await api.get(`/Drivers/${id}`);
+  //   return response.data;
+  // },
 
   rateDriver: async (driverId: string, data: RateDriverRequest): Promise<void> => {
     await api.post(`/Drivers/${driverId}/rate`, data);
