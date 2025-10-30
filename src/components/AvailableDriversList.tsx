@@ -102,11 +102,11 @@ export const AvailableDriversList: React.FC<AvailableDriversListProps> = ({
                         <Award className="w-4 h-4 text-green-500" />
                       </span>
                     )}
-                    {driverInfo.isAvailable && (
+                    {/* {driverInfo.isAvailable && (
                       <span className="px-2 py-1 bg-green-50 text-green-700 text-xs rounded-full">
                         Available
                       </span>
-                    )}
+                    )} */}
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 mb-3">

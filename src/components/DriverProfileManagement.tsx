@@ -118,19 +118,19 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
     }
   };
 
-  const handleCreateProfile = async () => {
-    try {
-      setUpdating(true);
-      await driverService.createProfile();
-      onProfileUpdated?.();
-      toast.success('Driver profile created successfully');
-    } catch (error: any) {
-      console.error('Failed to create profile:', error);
-      toast.error(error.response?.data || 'Failed to create profile');
-    } finally {
-      setUpdating(false);
-    }
-  };
+  // const handleCreateProfile = async () => {
+  //   try {
+  //     setUpdating(true);
+  //     await driverService.createProfile();
+  //     onProfileUpdated?.();
+  //     toast.success('Driver profile created successfully');
+  //   } catch (error: any) {
+  //     console.error('Failed to create profile:', error);
+  //     toast.error(error.response?.data || 'Failed to create profile');
+  //   } finally {
+  //     setUpdating(false);
+  //   }
+  // };
 
   return (
     <div className="space-y-4">
@@ -163,14 +163,14 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
             Update Location
           </Button>
 
-          <Button
+          {/* <Button
             onClick={handleCreateProfile}
             disabled={updating}
             className="flex items-center justify-center gap-2"
           >
             <Truck className="w-4 h-4" />
             {updating ? 'Creating...' : 'Create Profile'}
-          </Button>
+          </Button> */}
         </div>
       </Card>
 

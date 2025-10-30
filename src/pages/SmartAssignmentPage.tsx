@@ -68,6 +68,21 @@ export const SmartAssignmentPage = () => {
     }
   };
 
+  // Simpler approach: direct assignment from recommendation
+  const handleRecommendationAssign = async (rec: DriverRecommendation) => {
+    try {
+      if (!shipmentId) return;
+      await shipmentService.smartAssign(shipmentId, {
+        preferredDriverId: rec.driver.id.toString(),
+        useAutoAssignment: true
+      });
+      handleAssignment();
+    } catch (error: any) {
+      console.error('Failed to assign driver:', error);
+      toast.error(error.response?.data || 'Failed to assign driver');
+    }
+  };
+
   if (!shipment) {
     return (
       <Layout>
@@ -194,13 +209,7 @@ export const SmartAssignmentPage = () => {
                           <Button
                             size="sm"
                             variant={index === 0 ? 'primary' : 'secondary'}
-                            onClick={() => handleManualAssign({
-                              driver: rec.driver,
-                              driverDetails: rec.driverDetails,
-                              activeShipments: rec.activeShipments,
-                              isAvailable: rec.driverDetails.status === 'Available',
-                              availabilityReason: rec.driverDetails.status
-                            })}
+                            onClick={() => handleRecommendationAssign(rec)}
                           >
                             Assign
                           </Button>

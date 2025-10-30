@@ -52,7 +52,7 @@ export const ReportsPage = () => {
     }
   };
 
-  const handleDownload = async (reportId: number, reportType: string) => {
+  const handleDownload = async (reportId: string, reportType: string) => {
     try {
       const blob = await reportService.downloadReport(reportId);
       const url = window.URL.createObjectURL(blob);
