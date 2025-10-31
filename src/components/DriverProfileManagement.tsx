@@ -54,7 +54,11 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
       toast.success('Profile updated successfully');
     } catch (error: any) {
       console.error('Failed to update profile:', error?.response);
-      toast.error(error.response?.data || 'Failed to update profile');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update profile';
+      toast.error(errorMessage);
     } finally {
       setUpdating(false);
     }
@@ -70,7 +74,11 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
       toast.success('Status updated successfully');
     } catch (error: any) {
       console.error('Failed to update status:', error);
-      toast.error(error.response?.data || 'Failed to update status');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update status';
+      toast.error(errorMessage);
     } finally {
       setUpdating(false);
     }
@@ -112,25 +120,15 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
       toast.success('Location updated successfully');
     } catch (error: any) {
       console.error('Failed to update location:', error);
-      toast.error(error.response?.data || 'Failed to update location');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update location';
+      toast.error(errorMessage);
     } finally {
       setUpdating(false);
     }
   };
-
-  // const handleCreateProfile = async () => {
-  //   try {
-  //     setUpdating(true);
-  //     await driverService.createProfile();
-  //     onProfileUpdated?.();
-  //     toast.success('Driver profile created successfully');
-  //   } catch (error: any) {
-  //     console.error('Failed to create profile:', error);
-  //     toast.error(error.response?.data || 'Failed to create profile');
-  //   } finally {
-  //     setUpdating(false);
-  //   }
-  // };
 
   return (
     <div className="space-y-4">
@@ -162,15 +160,6 @@ export const DriverProfileManagement: React.FC<DriverProfileManagementProps> = (
             <MapPin className="w-4 h-4" />
             Update Location
           </Button>
-
-          {/* <Button
-            onClick={handleCreateProfile}
-            disabled={updating}
-            className="flex items-center justify-center gap-2"
-          >
-            <Truck className="w-4 h-4" />
-            {updating ? 'Creating...' : 'Create Profile'}
-          </Button> */}
         </div>
       </Card>
 

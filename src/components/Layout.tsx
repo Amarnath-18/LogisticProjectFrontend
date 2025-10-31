@@ -95,7 +95,7 @@ export const Layout = ({ children }: LayoutProps) => {
                       {user.role}
                     </span>
                   </div>
-                  <Button variant="secondary" size="sm" onClick={handleLogout}>
+                  <Button className='flex items-center justify-center' variant="secondary" size="sm" onClick={handleLogout}>
                     <LogOut className="w-4 h-4 lg:mr-1" />
                     <span className="hidden lg:inline">Logout</span>
                   </Button>
@@ -187,7 +187,7 @@ export const Layout = ({ children }: LayoutProps) => {
                       <div className="text-sm text-gray-500">{user.role}</div>
                     </div>
                   </div>
-                  <div className="mt-3 px-2">
+                  <div className="mt-3 px-2 flex items-center justify-center">
                     <Button
                       variant="secondary"
                       size="sm"

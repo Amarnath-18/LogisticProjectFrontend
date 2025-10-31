@@ -32,7 +32,7 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
     originRegion: '',
     destinationCity: '',
     destinationRegion: '',
-    Priority: '',
+    priority: 'Balanced',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -51,7 +51,7 @@ export const CreateShipmentForm: React.FC<CreateShipmentFormProps> = ({
       originRegion: '',
       destinationCity: '',
       destinationRegion: '',
-      Priority: '',
+      priority: 'Balanced',
     });
   };
 
@@ -78,6 +78,7 @@ const handleDestinationChange = (address: string, city?: string, state?: string)
   }));
 };
 
+  console.log(formData);
   
 
   return (
@@ -166,15 +167,14 @@ const handleDestinationChange = (address: string, city?: string, state?: string)
           </label>
           <select
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            value={formData.Priority || ''}
-            onChange={(e) => setFormData({ ...formData, Priority: e.target.value })}
+            value={formData.priority || ''}
+            onChange={(e) => setFormData({ ...formData, priority: e.target.value as any })}
           >
-            <option value="">Auto-select best driver</option>
+            <option value="Balanced" >Auto-select best driver</option>
             <option value="Distance">Prefer closest driver</option>
             <option value="Experience">Prefer most experienced driver</option>
             <option value="Rating">Prefer highest-rated driver</option>
             <option value="Availability">Prefer most available driver</option>
-            <option value="Balanced">Balanced assignment (recommended)</option>
           </select>
           <p className="text-xs text-gray-500 mt-1">
             Leave empty for automatic assignment based on optimal criteria

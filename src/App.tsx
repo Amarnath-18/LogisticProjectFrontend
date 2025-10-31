@@ -24,7 +24,11 @@ function App() {
             <Login />
           </AuthProtector>
           } />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" element={
+          <AuthProtector>
+            <Register />
+          </AuthProtector>
+        } />
         <Route path="/track" element={<TrackShipment />} />
 
         <Route

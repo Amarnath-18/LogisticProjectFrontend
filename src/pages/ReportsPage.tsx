@@ -46,7 +46,11 @@ export const ReportsPage = () => {
         endDate: '',
       });
     } catch (error: any) {
-      toast.error(error.response?.data || 'Failed to generate report');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to generate report';
+      toast.error(errorMessage);
     } finally {
       setGenerating(false);
     }

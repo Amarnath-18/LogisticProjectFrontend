@@ -41,7 +41,11 @@ export const ShipmentsPage = () => {
       setIsCreateModalOpen(false);
       loadShipments();
     } catch (error: any) {
-      toast.error(error.response?.data || 'Failed to create shipment');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to create shipment';
+      toast.error(errorMessage);
     } finally {
       setIsCreatingShipment(false);
     }

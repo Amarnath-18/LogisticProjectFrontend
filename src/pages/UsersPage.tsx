@@ -34,7 +34,13 @@ export const UsersPage = () => {
       await userService.deleteUser(id);
       setUsers(users.filter((u) => u.id !== id));
     } catch (error: any) {
-      toast.error(error.response?.data || 'Failed to delete user');
+      console.log(error.response);
+      
+      const errorMessage = error.response?.data || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to delete user';
+      toast.error(errorMessage);
     }
   };
 

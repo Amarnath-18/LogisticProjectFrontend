@@ -72,7 +72,7 @@ export interface CreateShipmentRequest {
   originRegion?: string;
   destinationCity?: string;
   destinationRegion?: string;
-  Priority?:string
+  priority: 'Experience' | 'Rating' | 'Availability' | 'Balanced';
 }
 
 export interface UpdateShipmentStatusRequest {

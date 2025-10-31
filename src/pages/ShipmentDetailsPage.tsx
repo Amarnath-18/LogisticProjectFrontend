@@ -61,7 +61,11 @@ export const ShipmentDetailsPage = () => {
       setIsUpdateStatusModalOpen(false);
       loadShipment();
     } catch (error: any) {
-      toast.error(error.response?.data || 'Failed to update status');
+      const errorMessage = error.response?.data?.title || 
+                          error.response?.data?.message || 
+                          error.message || 
+                          'Failed to update status';
+      toast.error(errorMessage);
     }
   };
 
@@ -95,7 +99,7 @@ export const ShipmentDetailsPage = () => {
             <p className="text-gray-600 mt-2">Shipment Details</p>
           </div>
           <div className="flex gap-2">
-            {user?.role === 'Driver' && shipment.assignedDriver?.id === user.id && (
+            {user?.role === 'Driver' && shipment.status != "Delivered" && shipment.status != "Cancelled" && shipment.assignedDriver?.id === user.id && (
               <Button onClick={() => setIsUpdateStatusModalOpen(true)}>Update Status</Button>
             )}
             {user?.role === 'Customer' && shipment.status === 'Delivered' && shipment.assignedDriver && (
