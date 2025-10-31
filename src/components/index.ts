@@ -20,3 +20,7 @@ export { DriverProfileManagement } from './DriverProfileManagement';
 export { DriverRatingModal } from './DriverRatingModal';
 export { DriverRatingsDisplay } from './DriverRatingsDisplay';
 export { PendingRatingsCard } from './PendingRatingsCard';
+
+// Audit Log Components
+export { AuditLogTable } from './AuditLogTable';
+export { AuditLogFilters } from './AuditLogFilters';

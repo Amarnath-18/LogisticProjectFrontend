@@ -1,7 +1,7 @@
 import { ReactNode, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Package, LogOut, User, BarChart3, Users, Home, Menu, X, Settings } from 'lucide-react';
+import { Package, LogOut, User, BarChart3, Users, Home, Menu, X, Settings, FileText, Activity } from 'lucide-react';
 import { Button } from './Button';
 
 interface LayoutProps {
@@ -63,6 +63,13 @@ export const Layout = ({ children }: LayoutProps) => {
                       <BarChart3 className="w-4 h-4" />
                       <span>Reports</span>
                     </Link>
+                    <Link
+                      to="/audit-logs"
+                      className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>Audit Logs</span>
+                    </Link>
                   </>
                 )}
 
@@ -72,6 +79,14 @@ export const Layout = ({ children }: LayoutProps) => {
                 >
                   <Package className="w-4 h-4" />
                   <span>Shipments</span>
+                </Link>
+
+                <Link
+                  to="/my-activity"
+                  className="flex items-center space-x-1 px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Activity className="w-4 h-4" />
+                  <span>My Activity</span>
                 </Link>
 
                 <Link
@@ -155,6 +170,14 @@ export const Layout = ({ children }: LayoutProps) => {
                       <BarChart3 className="w-5 h-5" />
                       <span>Reports</span>
                     </Link>
+                    <Link
+                      to="/audit-logs"
+                      className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <FileText className="w-5 h-5" />
+                      <span>Audit Logs</span>
+                    </Link>
                   </>
                 )}
 
@@ -165,6 +188,15 @@ export const Layout = ({ children }: LayoutProps) => {
                 >
                   <Package className="w-5 h-5" />
                   <span>Shipments</span>
+                </Link>
+
+                <Link
+                  to="/my-activity"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-blue-600 hover:bg-gray-50"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Activity className="w-5 h-5" />
+                  <span>My Activity</span>
                 </Link>
 
                 <Link

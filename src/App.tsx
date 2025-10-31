@@ -11,6 +11,8 @@ import { ShipmentDetailsPage } from './pages/ShipmentDetailsPage';
 import { UsersPage } from './pages/UsersPage';
 import { ReportsPage } from './pages/ReportsPage';
 import { ProfilePage } from './pages/ProfilePage';
+import { AuditLogsPage } from './pages/AuditLogsPage';
+import { MyActivityPage } from './pages/MyActivityPage';
 
 import AuthProtector from './components/AuthProtector';
 
@@ -72,6 +74,24 @@ function App() {
           element={
             <ProtectedRoute allowedRoles={['Admin']}>
               <ReportsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/audit-logs"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AuditLogsPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/my-activity"
+          element={
+            <ProtectedRoute>
+              <MyActivityPage />
             </ProtectedRoute>
           }
         />

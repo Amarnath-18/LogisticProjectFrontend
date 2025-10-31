@@ -57,15 +57,20 @@ export const ShipmentDetailsPage = () => {
   const handleUpdateStatus = async (statusData: UpdateShipmentStatusRequest) => {
     try {
       if(!id ) return;
+      setLoading(true);
       await shipmentService.updateStatus(id, statusData);
       setIsUpdateStatusModalOpen(false);
       loadShipment();
+      
     } catch (error: any) {
       const errorMessage = error.response?.data?.title || 
                           error.response?.data?.message || 
                           error.message || 
                           'Failed to update status';
       toast.error(errorMessage);
+    }
+    finally{
+      setLoading(false);
     }
   };
 
@@ -299,9 +304,12 @@ const UpdateStatusModal = ({ isOpen, onClose, onUpdate }: UpdateStatusModalProps
   });
 
   const handleSubmit = (e: React.FormEvent) => {
+
     e.preventDefault();
     onUpdate(formData);
   };
+
+  
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Update Shipment Status">

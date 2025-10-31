@@ -259,3 +259,32 @@ export interface ShipmentRatingStatusResponse {
   canBeRated: boolean;
   ratingIneligibilityReason?: string;
 }
+
+// Audit Log Types
+export interface AuditLogResponse {
+  id: string;
+  userId: string;
+  userName: string;
+  action: string;
+  targetTable: string | null;
+  targetId: string | null;
+  timestamp: string;
+}
+
+export interface AuditLogQueryRequest {
+  userId?: string;
+  action?: string;
+  targetTable?: string;
+  startDate?: string;
+  endDate?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}
+
+export interface AuditLogPagedResponse {
+  logs: AuditLogResponse[];
+  totalCount: number;
+  pageNumber: number;
+  pageSize: number;
+  totalPages: number;
+}
