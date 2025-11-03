@@ -31,7 +31,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         console.log('AuthContext: Checking current user...');
         const currentUser = await authService.getCurrentUser();
-        console.log('AuthContext: User found:', currentUser);
         setUser(currentUser);
       } catch (error: any) {
         console.log('AuthContext: Auth check failed:', error.response?.status, error.message);
@@ -46,7 +45,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = async (data: LoginRequest) => {
     const response = await authService.login(data);
-    console.log();
     
     setUser(response.user);
   };

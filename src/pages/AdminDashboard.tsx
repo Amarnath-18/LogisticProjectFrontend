@@ -26,8 +26,6 @@ export const AdminDashboard = () => {
       setLoading(false);
     }
   };
-
-  console.log(analytics);
   
 
   if (loading) {

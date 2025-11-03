@@ -77,8 +77,6 @@ const handleDestinationChange = (address: string, city?: string, state?: string)
     destinationRegion: state || prev.destinationRegion
   }));
 };
-
-  console.log(formData);
   
 
   return (
